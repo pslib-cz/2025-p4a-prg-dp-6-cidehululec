@@ -1,16 +1,21 @@
 ﻿using server_app;
 
-// Konfigurace pro Staging
-var stagingConfig = new ServerConfig.Builder("staging.server.internal", 5000)
-    .WithMaxConnections(200)
-    .WithTimeout(60)
-    .EnableLogging()
+// Konfigurace pro produkci
+ServerConfig productionConfig = ServerConfig.Create("api.produkce.cz", 443)
+                .WithEncryption()
+                .WithMaxConnections(1000)
+                .WithTimeout(10)
+                .EnableLogging()
+                .Build();
+
+// Konfigurace pro lokální vývoj
+ServerConfig localConfig = ServerConfig.Create("localhost", 8080)
     .Build();
 
-// Konfigurace pro Produkci
-var prodConfig = new ServerConfig.Builder("api.production.com", 443)
-    .WithEncryption()
-    .Build();
+Console.WriteLine("Konfigurace pro produkci:");
+Console.WriteLine(productionConfig);
 
-Console.WriteLine($"Staging: Server started on {stagingConfig.Host}:{stagingConfig.Port} (SSL: {stagingConfig.UseEncryption})");
-Console.WriteLine($"Produkce: Server started on {prodConfig.Host}:{prodConfig.Port} (SSL: {prodConfig.UseEncryption})");
+Console.WriteLine("");
+
+Console.WriteLine("Konfigurace pro lokální vývoj:");
+Console.WriteLine(localConfig);
